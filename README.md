@@ -1,22 +1,59 @@
-# dns_json
+<h1 align="center">dns_json</h1>
 
-Read and write DNS messages as [RFC 8427](https://www.rfc-editor.org/rfc/rfc8427) JSON, including malformed packets used for diagnostics. Ruby 3.3+; CRuby, JRuby and TruffleRuby. No dependency on the other JSON format gems.
+<p align="center">DNS wire messages and RFC 8427 JSON, with malformed-packet diagnostics.</p>
+
+<p align="center">
+  <a href="https://rubygems.org/gems/dns_json"><img src="https://img.shields.io/gem/v/dns_json" alt="Gem version"></a>
+  <a href="https://github.com/ydah/dns_json/actions/workflows/main.yml"><img src="https://github.com/ydah/dns_json/actions/workflows/main.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="https://www.ruby-lang.org/"><img src="https://img.shields.io/badge/Ruby-%3E%3D%203.3-CC342D?logo=ruby&amp;logoColor=white" alt="Ruby 3.3 or later"></a>
+  <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License"></a>
+</p>
+
+<p align="center">
+  <a href="#installation">Installation</a> &middot;
+  <a href="#quick-start">Quick start</a> &middot;
+  <a href="#wire-reconstruction-and-names">Wire reconstruction and names</a> &middot;
+  <a href="#development">Development</a> &middot;
+  <a href="#license">License</a>
+</p>
+
+Read and write DNS messages as [RFC 8427](https://www.rfc-editor.org/rfc/rfc8427) JSON, including malformed packets used for diagnostics.
+
+## Features
+
+- Decode DNS wire messages, inspect diagnostics, and preserve original packet bytes.
+- Build structured messages with RFC RDATA fields, output profiles, and JSON text sequences.
+- Bound parsing and validation without performing DNS resolution.
+
+## Installation
+
+Add the gem to your Gemfile:
+
+```ruby
+gem "dns_json"
+```
+
+Then run `bundle install`.
+
+Requires Ruby 3.3 or later and `json` 2.19.4 or later, below version 4. CI tests CRuby, JRuby, and TruffleRuby. No other gem from this format family is required.
+
+## Quick start
 
 ```ruby
 require "dns_json"
-
-message = DNSJSON.from_wire(packet_bytes, date: Time.now)
-message.malformed? # true when wire diagnostics were collected
-message.problems   # DNSJSON::Problem objects with byte offset and reason
-message.to_json(profile: DNSJSON::Profile::LOGGING)
-DNSJSON.parse(message.to_json).to_wire == packet_bytes # true
 
 query = DNSJSON::Message.new({
   "ID" => 1042, "RD" => 1, "QNAME" => "service.test.",
   "QTYPE" => 28, "QCLASS" => 1
 })
-query.to_wire
-query.qname
+packet_bytes = query.to_wire
+message = DNSJSON.from_wire(packet_bytes, date: Time.now)
+
+message.qname       # => "service.test."
+message.malformed?  # => false
+message.problems    # => [] (malformed input reports byte offsets and reasons)
+message.to_json(profile: DNSJSON::Profile::LOGGING)
+DNSJSON.parse(message.to_json).to_wire == packet_bytes # => true
 ```
 
 `Message` and `RR` wrap a Hash; `[]` accesses any member and `to_h` returns a deep copy. Unknown extension members survive the default JSON roundtrip. All RFC members are optional. `parse(..., strict: false)` retains invalid values and provides `warnings` with JSON Pointers; serialization validates strictly. JSON input and output use ASCII, with escaped Unicode in string values. Duplicate object keys are rejected on both json 2.x and 3.x.
@@ -64,7 +101,7 @@ Sequence readers process input incrementally, skip malformed elements by default
 
 Limits are configurable on `parse`, `from_wire`, and model construction: `max_bytes: 65_535`, `max_records: 4096`, `max_pointers: 128`, `max_json_bytes: 4_194_304`, `max_depth: 32`. Limits raise `LimitError`; reaching the record or pointer bound while decoding wire data instead returns a malformed message and preserves the original bytes. A JSON sequence has a per-element size bound.
 
-## Development and release
+## Development
 
 ```sh
 bundle install
@@ -79,6 +116,12 @@ RFC text, extracted examples and notices are downloaded only into ignored `tmp/`
 Tests include all RDATA forms, a Ruby standard-library `resolv` oracle, random packets and names, truncation, pointer loops, resource bounds, and JSON validation. CI covers supported CRuby versions plus head, JRuby and TruffleRuby on Ubuntu/macOS, json 2/3, coverage, syntax checks, RBS and standard-library interoperability.
 
 A `v*` tag runs `.github/workflows/release.yml` with the GitHub environment `release`, validates/builds the gem, publishes through RubyGems Trusted Publishing, then creates the GitHub release from CHANGELOG. Initial RubyGems publication and Trusted Publishing setup require the owner's action before tagging.
+
+## Contributing
+
+Bug reports and pull requests are welcome on [GitHub](https://github.com/ydah/dns_json/issues). See [Development](#development) for the checks to run before submitting a change. Report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
+## License
 
 MIT; see [LICENSE.txt](LICENSE.txt).
 
