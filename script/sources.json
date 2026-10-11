@@ -1,0 +1,10 @@
+{
+  "rfc8427.txt": {
+    "url": "https://www.rfc-editor.org/rfc/rfc8427.txt",
+    "sha256": "e23463533f3232d6821b971b31ea9f6c62eb9a4fe604010383d92d3307e54eab"
+  },
+  "rr_types.csv": {
+    "url": "https://www.iana.org/assignments/dns-parameters/dns-parameters-4.csv",
+    "sha256": "215ee79b6aabcf4d4b2a911f0513cd27da4fc7820c274afa81240b8589f340cc"
+  }
+}

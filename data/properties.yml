@@ -1,0 +1,17 @@
+# Independently maintained API metadata; all members are optional.
+ID: {accessor: id, section: '2.1', minimum: 0, maximum: 65535}
+Opcode: {accessor: opcode, section: '2.1', minimum: 0, maximum: 15}
+RCODE: {accessor: rcode, section: '2.1', minimum: 0, maximum: 15}
+QDCOUNT: {accessor: qdcount, section: '2.1', minimum: 0, maximum: 65535}
+ANCOUNT: {accessor: ancount, section: '2.1', minimum: 0, maximum: 65535}
+NSCOUNT: {accessor: nscount, section: '2.1', minimum: 0, maximum: 65535}
+ARCOUNT: {accessor: arcount, section: '2.1', minimum: 0, maximum: 65535}
+QNAME: {accessor: qname, section: '2.1'}
+QTYPE: {accessor: qtype, section: '2.1', minimum: 0, maximum: 65535}
+QCLASS: {accessor: qclass, section: '2.1', minimum: 0, maximum: 65535}
+NAME: {accessor: name, section: '2.2'}
+TYPE: {accessor: type, section: '2.2', minimum: 0, maximum: 65535}
+CLASS: {accessor: klass, section: '2.2', minimum: 0, maximum: 65535}
+TTL: {accessor: ttl, section: '2.2', minimum: -2147483648, maximum: 2147483647}
+RDLENGTH: {accessor: rdlength, section: '2.2', minimum: 0, maximum: 65535}
+length: {accessor: length, section: '2.1/2.2', minimum: 0, maximum: 65535}

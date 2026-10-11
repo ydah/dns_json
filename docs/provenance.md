@@ -1,0 +1,11 @@
+# Implementation provenance
+
+This project applies an MIT-only policy to additional runtime, development and comparison dependencies. Ruby itself and its standard libraries are exceptions. This is a provenance record, not a legal opinion or a claim of independently isolated clean-room development.
+
+The authored implementation in `lib/dns_json/` implements DNS wire fields, compression traversal, RDATA formats, RFC 8427 JSON rules, profiles and sequences. `data/` contains protocol identifiers, field bounds and wire-format metadata. These are maintained as implementation facts; RFC prose, ABNF and source examples are not shipped. `sig/dns_json.rbs` describes this library's API. `spec/support/rdata_cases.rb` uses authored test names and synthetic payloads. Pinned RFC/IANA inputs, their notices and extracted examples are kept in ignored `tmp/` for tests.
+
+Earlier validation used dnspython 2.8.0 as a separate process. The Ruby wrapper generated this library's wire bytes and the Python wrapper called dnspython's public codecs to compare results; these wrappers did not contain a port of its codecs. dnspython's actual wheel LICENSE is ISC, so the comparison scripts, pinned requirement and CI installation have been removed under the additional-dependency policy. The independent comparison against Ruby's standard-library `resolv` remains in `spec/dns_json_spec.rb`.
+
+The available implementation history does not establish a complete list of every source inspected during the initial development. Earlier notes name dnspython and miekg/dns as reference implementations; the extent of source inspection cannot be reconstructed from those notes. No specific copied or translated third-party implementation has been identified in the reviewed files, but that finding is narrower than a guarantee that no external source was ever consulted. Packaging exclusions alone do not resolve derivation questions. Revisit any identified code-origin concern with the actual source and its terms.
+
+Runtime dependency `json` is a Ruby standard library covered by the stated exception. Additional test tools use MIT licenses. RuboCop was removed because its Unicode-data dependencies have additional non-MIT terms. Dependency changes require checking actual license files and transitive dependencies, rather than relying solely on a package's declared license name.

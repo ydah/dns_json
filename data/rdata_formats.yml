@@ -1,0 +1,105 @@
+---
+1:
+  name: A
+  section: '2.3'
+  wire_rfc: 1035
+28:
+  name: AAAA
+  section: '2.3'
+  wire_rfc: 3596
+5:
+  name: CNAME
+  section: '2.3'
+  wire_rfc: 1035
+39:
+  name: DNAME
+  section: '2.3'
+  wire_rfc: 6672
+2:
+  name: NS
+  section: '2.3'
+  wire_rfc: 1035
+12:
+  name: PTR
+  section: '2.3'
+  wire_rfc: 1035
+16:
+  name: TXT
+  section: '2.3'
+  wire_rfc: 1035
+60:
+  name: CDNSKEY
+  section: '2.3'
+  wire_rfc: 7344
+59:
+  name: CDS
+  section: '2.3'
+  wire_rfc: 7344
+62:
+  name: CSYNC
+  section: '2.3'
+  wire_rfc: 7477
+48:
+  name: DNSKEY
+  section: '2.3'
+  wire_rfc: 4034
+55:
+  name: HIP
+  section: '2.3'
+  wire_rfc: 8005
+45:
+  name: IPSECKEY
+  section: '2.3'
+  wire_rfc: 4025
+25:
+  name: KEY
+  section: '2.3'
+  wire_rfc: 2535
+15:
+  name: MX
+  section: '2.3'
+  wire_rfc: 1035
+47:
+  name: NSEC
+  section: '2.3'
+  wire_rfc: 4034
+50:
+  name: NSEC3
+  section: '2.3'
+  wire_rfc: 5155
+51:
+  name: NSEC3PARAM
+  section: '2.3'
+  wire_rfc: 5155
+61:
+  name: OPENPGPKEY
+  section: '2.3'
+  wire_rfc: 7929
+46:
+  name: RRSIG
+  section: '2.3'
+  wire_rfc: 4034
+53:
+  name: SMIMEA
+  section: '2.3'
+  wire_rfc: 8162
+99:
+  name: SPF
+  section: '2.3'
+  wire_rfc: 4408
+33:
+  name: SRV
+  section: '2.3'
+  wire_rfc: 2782
+44:
+  name: SSHFP
+  section: '2.3'
+  wire_rfc: 4255
+52:
+  name: TLSA
+  section: '2.3'
+  wire_rfc: 6698
+43:
+  name: DS
+  section: '2.3'
+  wire_rfc: 4034
