@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Read and write DNS wire messages as RFC 8427 JSON. Inspect malformed packets while retaining diagnostics and the original bytes.">
+  <meta name="theme-color" content="#f8fafc">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="dns_json — Work with DNS messages in Ruby">
+  <meta property="og:description" content="Read and write DNS wire messages as RFC 8427 JSON. Inspect malformed packets while retaining diagnostics and the original bytes.">
+  <meta property="og:url" content="https://ydah.github.io/dns_json/">
+  <title>dns_json — Work with DNS messages in Ruby</title>
+  <link rel="canonical" href="https://ydah.github.io/dns_json/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./" aria-label="dns_json home"><img src="favicon.svg" width="32" height="32" alt=""><span>dns_json</span></a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#installation">Installation</a>
+        <a href="https://github.com/ydah/dns_json#readme">Documentation</a>
+        <a href="https://github.com/ydah/dns_json">GitHub</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="container" tabindex="-1">
+    <section class="hero" aria-labelledby="title">
+      <div class="hero-copy">
+        <p class="format">DNS wire / RFC 8427 JSON</p>
+        <h1 id="title">Work with DNS messages in Ruby</h1>
+        <p class="intro">Read and write DNS wire messages as RFC 8427 JSON. Inspect malformed packets while retaining diagnostics and the original bytes.</p>
+        <div class="actions">
+          <a class="button" href="#installation">Get started</a>
+          <a class="text-link" href="https://github.com/ydah/dns_json#readme">Read the documentation</a>
+        </div>
+        <p class="metadata"><span>Ruby 3.3+</span><a href="https://github.com/ydah/dns_json/blob/main/LICENSE.txt">MIT license</a><a href="https://rubygems.org/gems/dns_json">RubyGems</a></p>
+      </div>
+      <figure class="example" id="quick-start">
+        <figcaption><span>Quick start</span><span>Ruby</span></figcaption>
+        <pre tabindex="0" role="region" aria-label="Ruby quick start example"><code>require <span class="token-string">&quot;</span><span class="token-string">dns_json</span><span class="token-string">&quot;</span>
+
+query = DNSJSON::Message.new({
+  <span class="token-string">&quot;</span><span class="token-string">ID</span><span class="token-string">&quot;</span> =&gt; 1042, <span class="token-string">&quot;</span><span class="token-string">RD</span><span class="token-string">&quot;</span> =&gt; 1, <span class="token-string">&quot;</span><span class="token-string">QNAME</span><span class="token-string">&quot;</span> =&gt; <span class="token-string">&quot;</span><span class="token-string">service.test.</span><span class="token-string">&quot;</span>,
+  <span class="token-string">&quot;</span><span class="token-string">QTYPE</span><span class="token-string">&quot;</span> =&gt; 28, <span class="token-string">&quot;</span><span class="token-string">QCLASS</span><span class="token-string">&quot;</span> =&gt; 1
+})
+packet_bytes = query.to_wire
+message = DNSJSON.from_wire(packet_bytes, date: Time.now)
+
+message.qname       <span class="token-comment"># =&gt; &quot;service.test.&quot;
+</span>message.malformed?  <span class="token-comment"># =&gt; false
+</span>message.problems    <span class="token-comment"># =&gt; [] (malformed input reports byte offsets and reasons)
+</span>message.to_json(profile: DNSJSON::Profile::LOGGING)
+DNSJSON.parse(message.to_json).to_wire == packet_bytes <span class="token-comment"># =&gt; true</span></code></pre>
+      </figure>
+    </section>
+    <ul class="features" aria-label="Features">
+        <li><h2>Inspect packets</h2><p>Decode headers, questions, and resource records, including partial messages with byte-level diagnostics.</p></li>
+        <li><h2>Preserve the source</h2><p>Keep original packet bytes for exact reproduction, or construct messages from structured fields.</p></li>
+        <li><h2>Shape your output</h2><p>Choose member profiles and exchange query/response pairs or JSON text sequences.</p></li>
+    </ul>
+    <section class="section" id="installation" aria-labelledby="installation-title">
+      <h2 id="installation-title">Installation</h2>
+      <div class="section-body">
+        <p>Add the gem to your Gemfile:</p>
+        <pre class="install-command" tabindex="0" role="region" aria-label="Gemfile entry"><code>gem "dns_json"</code></pre>
+        <p>Run <code>bundle install</code>, then try the <a href="#quick-start">quick start</a>. Requires Ruby 3.3 or later.</p>
+        <p>For supported dependencies and optional integrations, see the <a href="https://github.com/ydah/dns_json#installation">installation guide</a>.</p>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="scope-title">
+      <h2 id="scope-title">Scope &amp; documentation</h2>
+      <div class="section-body">
+        <p>DNS resolution, DNSSEC verification, and pcap handling are outside scope. Original message bytes take precedence during wire encoding. The privacy profile retains query names and answer addresses; it does not anonymize a message.</p>
+        <p><a href="https://github.com/ydah/dns_json#readme">Read the full documentation</a> for supported formats, examples, and API details.</p>
+        
+        <ul class="resource-links" aria-label="Project resources">
+          <li><a href="https://github.com/ydah/dns_json/blob/main/CHANGELOG.md">Changelog</a></li>
+          <li><a href="https://github.com/ydah/dns_json/issues">Report an issue</a></li>
+          <li><a href="https://github.com/ydah/dns_json/blob/main/SECURITY.md">Security</a></li>
+          <li><a href="https://github.com/ydah/dns_json#contributing">Contributing</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <footer class="container site-footer">
+    <div class="footer-top"><p>dns_json · Maintained by <a href="https://github.com/ydah">ydah</a></p><p>Open source under the <a href="https://github.com/ydah/dns_json/blob/main/LICENSE.txt">MIT license</a>.</p></div>
+    <nav class="related" aria-label="Related Ruby gems">
+      <p>More Ruby gems for structured data</p>
+      <ul>
+          <li><a href="https://ydah.github.io/iodef/">iodef</a></li>
+          <li><a href="https://ydah.github.io/jcard_jcal/">jcard_jcal</a></li>
+          <li><a href="https://ydah.github.io/jscalendar/">jscalendar</a></li>
+          <li><a href="https://ydah.github.io/jscontact/">jscontact</a></li>
+          <li><a href="https://ydah.github.io/sd_jwt/">sd_jwt</a></li>
+          <li><a href="https://ydah.github.io/senml/">senml</a></li>
+          <li><a href="https://ydah.github.io/yang_json/">yang_json</a></li>
+      </ul>
+    </nav>
+  </footer>
+</body>
+</html>
