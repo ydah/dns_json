@@ -49,7 +49,7 @@ module DNSJSON
         if date
           raise ArgumentError, "date must be a nonnegative Time" unless date.is_a?(Time) && date.to_f >= 0
 
-          @data["dateString"] = date.utc.iso8601(6)
+          @data["dateString"] = date.getutc.iso8601(6)
           @data["dateSeconds"] = date.to_f
         end
         Message.new(@data, problems: @problems, **@limits)

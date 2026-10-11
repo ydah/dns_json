@@ -12,6 +12,7 @@ module DNSJSON
       raise ValidationError, "expected an object" unless data.is_a?(Hash)
 
       @limits = DNSJSON.validate_limits(limits)
+      @strict = strict
       @data = DNSJSON.copy(data)
       @problems = problems.freeze
       @warnings = validate
@@ -112,8 +113,8 @@ module DNSJSON
       super(data, **)
     end
 
-    def query = self["queryMessage"] && Message.new(self["queryMessage"])
-    def response = self["responseMessage"] && Message.new(self["responseMessage"])
+    def query = self["queryMessage"] && Message.new(self["queryMessage"], strict: @strict, **@limits)
+    def response = self["responseMessage"] && Message.new(self["responseMessage"], strict: @strict, **@limits)
     def to_wire = raise(ConversionError, "select the query or response before writing wire data")
   end
 

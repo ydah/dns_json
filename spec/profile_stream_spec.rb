@@ -31,6 +31,32 @@ RSpec.describe "profiles, pairs and sequences" do
     expect(DNSJSON::Pair.new.query).to be_nil
     expect { pair.to_wire }.to raise_error(DNSJSON::ConversionError)
   end
+  it "keeps lenient pair messages inspectable while serialization remains strict" do
+    source = '{"queryMessage":{"ID":70000},"responseMessage":{"ID":-1}}'
+    expect { DNSJSON.parse(source) }.to raise_error(DNSJSON::ValidationError)
+    expect { DNSJSON::Pair.new(JSON.parse(source)) }.to raise_error(DNSJSON::ValidationError)
+    pair = DNSJSON.parse(source, strict: false)
+    [pair.query, pair.response].each do |child|
+      expect(child.warnings.map(&:pointer)).to eq(["/ID"])
+      expect { child.to_json }.to raise_error(DNSJSON::ValidationError)
+      expect { child.to_wire }.to raise_error(DNSJSON::ValidationError)
+    end
+    expect(pair.query.id).to eq(70_000)
+    expect(pair.response.id).to eq(-1)
+    expect { pair.to_json }.to raise_error(DNSJSON::ValidationError)
+  end
+  it "retains pair resource limits when exposing either message" do
+    data = message.to_h.merge("samples" => Array.new(4097, 1))
+    pair = DNSJSON::Pair.new({ "queryMessage" => data, "responseMessage" => data }, max_records: 5000)
+    expect(pair.query["samples"].length).to eq(4097)
+    expect(pair.response["samples"].length).to eq(4097)
+
+    pair = DNSJSON::Pair.new(query: message, response: message, max_bytes: 10, max_json_bytes: 10)
+    [pair.query, pair.response].each do |child|
+      expect { child.to_wire }.to raise_error(DNSJSON::LimitError)
+      expect { child.to_json }.to raise_error(DNSJSON::LimitError)
+    end
+  end
   it "reads and writes incremental JSON text sequences" do
     io = StringIO.new
     writer = DNSJSON::Stream::Writer.new(io)

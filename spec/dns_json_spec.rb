@@ -156,6 +156,14 @@ RSpec.describe DNSJSON do
     expect(parsed["dateString"]).to eq("2025-02-03T00:00:00.000000Z")
     expect { DNSJSON.from_wire(wire, date: -1) }.to raise_error(ArgumentError)
   end
+  it "preserves caller timestamps and accepts frozen non-UTC times" do
+    date = Time.new(2025, 2, 3, 9, 0, 0, "+09:00")
+    parsed = DNSJSON.from_wire(wire, date: date)
+    expect(parsed["dateString"]).to eq("2025-02-03T00:00:00.000000Z")
+    expect(parsed["dateSeconds"]).to eq(date.to_f)
+    expect(date.utc_offset).to eq(9 * 3600)
+    expect(DNSJSON.from_wire(wire, date: date.freeze)["dateString"]).to eq(parsed["dateString"])
+  end
   it "rejects invalid JSON members with pointers, while lenient parsing records warnings" do
     { "ID" => -1, "Opcode" => 16, "QR" => 3, "TTL" => 2_147_483_648, "dateSeconds" => -1, "dateString" => "oops",
       "comment" => 7, "NAMEHEX" => "ff", "answerRRs" => [3], "compressedNAME" => [] }.each do |key, value|
